@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini POS - Pink Edition</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+:root {
+  --pink: #df83ad;
+  --dark: #bd5e8d;
+  --light: #fff0f6;
+  --text: #654052;
+}
+
+body {
+  background: #fff7fa;
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background: white;
+  box-shadow: 0 3px 15px #e8b6cb55;
+}
+
+.navbar-brand {
+  color: var(--dark) !important;
+  font-weight: bold;
+}
+
+.nav-link {
+  color: #80536a !important;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--dark) !important;
+}
+
+.hero {
+  background: linear-gradient(120deg, #ffe3ef, #f8c4dc);
+  border-radius: 22px;
+  padding: 30px;
+}
+
+.metric-card, .panel {
+  background: white;
+  border: none;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 15px #d98aaa20;
+}
+
+.metric-icon {
+  display: inline-block;
+  background: var(--light);
+  color: var(--dark);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+.metric-value {
+  color: var(--dark);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.section-title {
+  color: #a64f79;
+  font-weight: bold;
+}
+
+.btn-pink {
+  background: var(--pink);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.btn-pink:hover {
+  background: var(--dark);
+  color: white;
+}
+
+.btn-pink:disabled {
+  background: #d9b6c7;
+  color: white;
+}
+
+.btn-outline-pink {
+  border: 1px solid var(--pink);
+  color: var(--dark);
+  border-radius: 10px;
+}
+
+.btn-outline-pink:hover {
+  background: var(--pink);
+  color: white;
+}
+
+.form-control, .form-select {
+  border-radius: 10px;
+  border-color: #f0cfdd;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px #df83ad25;
+}
+
+.page-section {
+  display: none;
+}
+
+.page-section.active {
+  display: block;
+}
+
+.product-card {
+  background: white;
+  border: 1px solid #f8d9e6;
+  border-radius: 18px;
+  overflow: hidden;
+  height: 100%;
+  transition: .2s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 7px 18px #d98aaa30;
+}
+
+.product-img {
+  width: 100%;
+  height: 155px;
+  object-fit: cover;
+  background: #ffeaf2;
+}
+
+.product-body {
+  padding: 14px;
+}
+
+.badge-safe {
+  background: #d9f5e4;
+  color: #21834a;
+}
+
+.badge-low {
+  background: #fff0c7;
+  color: #a87800;
+}
+
+.badge-empty {
+  background: #ffd9df;
+  color: #c52e50;
+}
+
+#imagePreview {
+  display: none;
+  width: 190px;
+  height: 145px;
+  object-fit: cover;
+  border: 3px solid #f3b6d0;
+  border-radius: 15px;
+  margin-top: 12px;
+}
+
+.receipt {
+  background: #fff6fa;
+  border: 2px dashed #e9a7c4;
+  border-radius: 16px;
+  padding: 24px;
+  color: #684458;
+  max-width: 450px;
+  margin: auto;
+}
+
+.receipt h4 {
+  color: #c45d8c;
+  font-weight: bold;
+}
+
+footer {
+  color: #b17c96;
+  text-align: center;
+  padding: 25px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #receiptContent, #receiptContent * {
+    visibility: visible;
+  }
+
+  #receiptContent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    background: white;
+    color: black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+<div class="container">
+<a class="navbar-brand" href="#" onclick="showPage('home')">🎀 Mini POS</a>
+
+<button class="navbar-toggler" type="button"
+data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarMenu">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item">
+<a class="nav-link active" onclick="showPage('home',this)">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" onclick="showPage('products',this)">Produk</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" onclick="showPage('manage',this)">Kelola Produk</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" onclick="showPage('cart',this)">Keranjang 🛒</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" onclick="showPage('history',this)">Transaksi</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+
+<main class="container py-4">
+
+<section id="home" class="page-section active">
+
+<div class="hero mb-4">
+<h2 class="fw-bold">Selamat Datang di Mini POS! 💗</h2>
+<p>Kelola produk, stok, dan transaksi dengan mudah.</p>
+<button class="btn btn-pink px-4"
+onclick="showPage('products')">Mulai Belanja</button>
+</div>
+
+<div class="row g-3 mb-4">
+<div class="col-md-4">
+<div class="metric-card">
+<div class="metric-icon">💰</div>
+<p class="mt-3 mb-1">Omzet Hari Ini</p>
+<div class="metric-value" id="totalRevenue">Rp0</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="metric-card">
+<div class="metric-icon">📦</div>
+<p class="mt-3 mb-1">Total Stok</p>
+<div class="metric-value" id="totalStock">0</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="metric-card">
+<div class="metric-icon">🧾</div>
+<p class="mt-3 mb-1">Jumlah Transaksi</p>
+<div class="metric-value" id="totalTransactions">0</div>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h5 class="section-title">✨ Produk Pilihan</h5>
+<div class="row g-3 mt-1" id="homeProducts"></div>
+</div>
+
+</section>
+
+<section id="products" class="page-section">
+<h3 class="section-title mb-3">🍓 Daftar Produk</h3>
+
+<div class="row g-3 mb-3">
+<div class="col-md-8">
+<input type="text" class="form-control"
+id="searchProduct"
+placeholder="Cari nama produk..."
+oninput="renderProducts()">
+</div>
+
+<div class="col-md-4">
+<button class="btn btn-pink w-100"
+onclick="showPage('manage')">+ Tambah Produk</button>
+</div>
+</div>
+
+<div class="row g-3" id="productList"></div>
+</section>
+
+<section id="manage" class="page-section">
+<h3 class="section-title mb-3">🎀 Kelola Produk</h3>
+
+<div class="panel mb-4">
+<h5 id="formTitle">Tambah Produk Baru</h5>
+
+<form id="productForm">
+<input type="hidden" id="editId">
+
+<div class="row g-3">
+
+<div class="col-md-6">
+<label class="form-label">Nama Produk</label>
+<input type="text" class="form-control"
+id="productName" placeholder="Contoh: Nasi Goreng" required>
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Harga (Rp)</label>
+<input type="number" class="form-control"
+id="productPrice" min="1" required>
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Jumlah Stok</label>
+<input type="number" class="form-control"
+id="productStock" min="0" required>
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Kategori</label>
+<select class="form-select" id="productCategory" required>
+<option value="Makanan">Makanan</option>
+<option value="Minuman">Minuman</option>
+<option value="Camilan">Camilan</option>
+<option value="Lainnya">Lainnya</option>
+</select>
+</div>
+
+<div class="col-12">
+<label class="form-label">Foto Produk</label>
+<input type="file" class="form-control"
+id="productImage" accept="image/*" required>
+
+<img id="imagePreview" alt="Preview Foto Produk">
+
+<p class="text-muted small mt-2">
+Pilih foto langsung dari galeri HP atau folder gambar di komputer.
+</p>
+</div>
+
+<div class="col-12">
+<button class="btn btn-pink px-4" type="submit">
+♡ Simpan Produk
+</button>
+
+<button class="btn btn-outline-pink"
+type="button" onclick="resetForm()">
+Reset
+</button>
+</div>
+
+</div>
+</form>
+</div>
+
+<div class="panel">
+<h5>Daftar Produk Tersimpan</h5>
+
+<div class="table-responsive">
+<table class="table align-middle">
+<thead>
+<tr>
+<th>Produk</th>
+<th>Harga</th>
+<th>Stok</th>
+<th>Kategori</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="manageList"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="cart" class="page-section">
+<h3 class="section-title mb-3">🛒 Keranjang Belanja</h3>
+
+<div class="panel">
+<div class="table-responsive">
+<table class="table align-middle">
+<thead>
+<tr>
+<th>Produk</th>
+<th>Harga</th>
+<th>Jumlah</th>
+<th>Subtotal</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="cartList"></tbody>
+</table>
+</div>
+
+<hr>
+
+<div class="text-end">
+<h5>Total Pembayaran</h5>
+<h3 class="metric-value" id="cartTotal">Rp0</h3>
+<button class="btn btn-pink px-4 mt-2"
+id="checkoutButton" onclick="goCheckout()">
+Lanjut Pembayaran
+</button>
+</div>
+</div>
+</section>
+
+<section id="checkout" class="page-section">
+<h3 class="section-title mb-3">💳 Pembayaran</h3>
+
+<div class="panel">
+<h5>Total Belanja</h5>
+<h2 class="metric-value mb-4" id="checkoutTotal">Rp0</h2>
+
+<label class="form-label">Metode Pembayaran</label>
+<select class="form-select mb-3" id="paymentMethod"
+onchange="updatePayment()">
+<option value="Tunai">Tunai</option>
+<option value="QRIS">QRIS (Simulasi)</option>
+<option value="Transfer Bank">Transfer Bank (Simulasi)</option>
+</select>
+
+<div id="cashArea">
+<label class="form-label">Uang Pembayaran (Rp)</label>
+<input type="number" id="cashAmount"
+class="form-control" min="0"
+placeholder="Masukkan jumlah uang"
+oninput="calculateChange()">
+
+<p class="mt-3" id="paymentMessage">
+Masukkan uang pembayaran.
+</p>
+
+<h5>Kembalian:
+<span class="metric-value" id="changeAmount">Rp0</span>
+</h5>
+</div>
+
+<div id="otherPayment" class="alert alert-info d-none mt-3">
+Pembayaran simulasi untuk tugas sekolah.
+</div>
+
+<button class="btn btn-pink w-100 mt-3"
+id="payButton" onclick="completePayment()">
+Bayar Sekarang 💗
+</button>
+
+<button class="btn btn-outline-pink w-100 mt-2"
+onclick="showPage('cart')">
+Kembali ke Keranjang
+</button>
+</div>
+</section>
+
+<section id="receipt" class="page-section">
+<h3 class="section-title text-center mb-3">🎀 Nota Pembayaran</h3>
+
+<div class="receipt" id="receiptContent">
+<div class="text-center">
+<h4>♡ MINI POS ♡</h4>
+<p>Terima kasih sudah berbelanja!</p>
+<hr>
+</div>
+
+<p>No. Transaksi: <strong id="receiptNumber"></strong></p>
+<p>Tanggal: <span id="receiptDate"></span></p>
+<p>Metode: <span id="receiptMethod"></span></p>
+
+<hr>
+<div id="receiptItems"></div>
+<hr>
+
+<div class="d-flex justify-content-between">
+<strong>Total</strong>
+<strong id="receiptTotal"></strong>
+</div>
+
+<div class="d-flex justify-content-between">
+<span>Bayar</span>
+<span id="receiptCash"></span>
+</div>
+
+<div class="d-flex justify-content-between">
+<span>Kembalian</span>
+<strong id="receiptChange"></strong>
+</div>
+
+<hr>
+
+<div class="text-center">
+<strong>Terima kasih 💗</strong>
+<p>Semoga harimu menyenangkan!</p>
+</div>
+</div>
+
+<div class="text-center mt-4 no-print">
+<button class="btn btn-pink px-4"
+onclick="window.print()">🖨️ Cetak Nota</button>
+
+<button class="btn btn-outline-pink"
+onclick="showPage('products')">Transaksi Baru</button>
+</div>
+</section>
+
+<section id="history" class="page-section">
+<h3 class="section-title mb-3">🧾 Riwayat Transaksi</h3>
+
+<div class="panel">
+<div class="table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>No.</th>
+<th>Tanggal</th>
+<th>Metode</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="historyList"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+</main>
+
+<footer>
+Mini POS Pink Edition ♡ | Project XI RPL
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
